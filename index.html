@@ -1,99 +1,164 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kids Guru</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin:0; background:#f6f9ff; }
-    header { background:#6ec8ff; padding:20px; text-align:center; }
-    header h1 { color:white; font-size:40px; margin:0; }
+/* --- Google Fonts इम्पोर्ट --- */
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&family=Fredoka+One&display=swap');
 
-    .banner {
-      background:url('banner-cartoon.png');
-      background-size:cover;
-      height:250px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:#fff;
-      font-size:32px;
-      font-weight:bold;
-      text-shadow:2px 2px 4px #000;
-    }
+/* --- रंग आणि व्हेरिएबल्स --- */
+:root {
+    --primary-color: #FFC107; /* तेजस्वी पिवळा - आनंदी रंग */
+    --secondary-color: #FF5722; /* केशरी - ऊर्जेसाठी */
+    --accent-color: #4CAF50; /* हिरवा - फ्रेश वाटण्यासाठी */
+    --text-dark: #333333;
+    --text-light: #ffffff;
+    --bg-light: #FFF9E6; /* पांढऱ्याऐवजी हलका क्रीम कलर */
+    --border-radius-xl: 25px; /* कोपरे गोलाकार करण्यासाठी */
+    --box-shadow-soft: 0 10px 20px rgba(0,0,0,0.1); /* सॉफ्ट सावली */
+}
 
-    .section { padding:20px; }
-    .section h2 { color:#444; }
+body {
+    font-family: 'Baloo 2', cursive, sans-serif; /* मुलांसाठी वाचायला सोपा फॉन्ट */
+    color: var(--text-dark);
+    background-color: var(--bg-light);
+    /* बॅकग्राउंडला हलका पॅटर्न (ऐच्छिक) - सध्या साधे ठेवले आहे */
+    background-image: radial-gradient(#ffeb3b33 2px, transparent 2px);
+    background-size: 30px 30px;
+}
 
-    .grid {
-      display:grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap:15px;
-      margin-top:10px;
-    }
+/* --- हेडिंग्जसाठी मस्त फॉन्ट --- */
+h1, h2, h3, h4, h5, h6, .navbar-brand {
+    font-family: 'Fredoka One', cursive; /* जाड आणि गोलाकार फॉन्ट */
+    color: var(--secondary-color);
+    letter-spacing: 1px;
+}
 
-    .card {
-      background:white;
-      padding:15px;
-      border-radius:12px;
-      text-align:center;
-      box-shadow:0 2px 6px rgba(0,0,0,0.1);
-      font-size:18px;
-      cursor:pointer;
-      transition:0.2s;
-    }
+/* --- नॅव्हिगेशन बार (Navbar) --- */
+.navbar {
+    background-color: var(--text-light) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-bottom-left-radius: var(--border-radius-xl);
+    border-bottom-right-radius: var(--border-radius-xl);
+}
 
-    .card:hover { transform:scale(1.05); }
+.navbar-brand {
+    font-size: 1.8rem;
+    color: var(--secondary-color) !important;
+    text-shadow: 2px 2px 0px var(--primary-color);
+}
 
-    .video-box iframe { width:100%; height:250px; border-radius:12px; }
+.nav-link {
+    font-weight: 600;
+    color: var(--text-dark) !important;
+    transition: all 0.3s ease;
+    padding: 10px 15px !important;
+    border-radius: 20px;
+}
 
-    footer { background:#6ec8ff; padding:15px; text-align:center; color:white; margin-top:20px; }
-  </style>
-</head>
-<body>
+.nav-link:hover, .nav-link.active {
+    color: var(--secondary-color) !important;
+    background-color: #fff0c4; /* होव्हर केल्यावर हलका पिवळा रंग */
+    transform: translateY(-3px); /* थोडे वर उचलल्यासारखे वाटेल */
+}
 
-<header>
-  <h1>Kids Guru</h1>
-</header>
+.btn-outline-success {
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+    border-radius: 20px;
+    border-width: 2px;
+    font-family: 'Fredoka One', cursive;
+}
 
-<div class="banner">Learn • Play • Grow</div>
+.btn-outline-success:hover {
+    background-color: var(--accent-color);
+    color: white;
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+}
 
-<div class="section">
-  <h2>Learning Categories</h2>
-  <div class="grid">
-    <div class="card">ABCD</div>
-    <div class="card">Numbers</div>
-    <div class="card">Colors</div>
-    <div class="card">Animals</div>
-    <div class="card">Shapes</div>
-  </div>
-</div>
+/* --- हिरो सेक्शन (सर्वात वरचा भाग) --- */
+.hero-section {
+    padding: 80px 0;
+    /* खाली वाकडी लाईन येण्यासाठी */
+    border-bottom-left-radius: 50px;
+    border-bottom-right-radius: 50px;
+    background: linear-gradient(to bottom, #ffffff, var(--bg-light));
+}
 
-<div class="section">
-  <h2>Fun Learning Games</h2>
-  <div class="grid">
-    <div class="card">Match the Letters</div>
-    <div class="card">Counting Game</div>
-    <div class="card">Color Puzzle</div>
-    <div class="card">Animal Sound Game</div>
-  </div>
-</div>
+.hero-section h1 {
+    font-size: 3.5rem;
+    color: var(--secondary-color);
+    text-shadow: 3px 3px 0px var(--primary-color);
+    margin-bottom: 20px;
+}
 
-<div class="section">
-  <h2>Rhymes Videos</h2>
-  <div class="video-box">
-    <iframe src="https://www.youtube.com/embed/Hc5YxLZf8-k" allowfullscreen></iframe>
-  </div>
-</div>
+.hero-section p {
+    font-size: 1.3rem;
+    color: #666;
+    margin-bottom: 30px;
+}
 
-<div class="section">
-  <h2>Daily Learning Task</h2>
-  <div class="card">Today's Activity: Learn 5 new words and practice counting 1–20!</div>
-</div>
+.hero-section img {
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--box-shadow-soft);
+    border: 5px solid var(--primary-color);
+    transition: transform 0.5s ease;
+}
 
-<footer>
-  Kids Guru © 2025 | Learn • Play • Grow
-</footer>
+.hero-section img:hover {
+    transform: scale(1.05) rotate(2deg); /* फोटोवर कर्सर नेल्यावर तो हलेल */
+}
 
-</body>
-</html>
+/* --- बटन्स (फुगीर आणि आकर्षक) --- */
+.btn-primary {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.2rem;
+    padding: 12px 30px;
+    border-radius: 50px; /* पूर्ण गोलाकार बटण */
+    box-shadow: 0 8px 0px #bf360c; /* बटणाला 3D इफेक्ट देण्यासाठी खाली गडद सावली */
+    transition: all 0.2s ease;
+    margin-top: 10px;
+}
+
+.btn-primary:hover {
+    background-color: #ff7043;
+    border-color: #ff7043;
+    transform: translateY(-3px); /* थोडे वर जाईल */
+    box-shadow: 0 10px 0px #bf360c;
+}
+
+.btn-primary:active {
+    transform: translateY(4px); /* क्लिक केल्यावर खाली दबेल */
+    box-shadow: 0 4px 0px #bf360c;
+}
+
+/* --- अबाउट आणि इतर सेक्शन --- */
+h2.text-center {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    position: relative;
+    display: inline-block;
+}
+
+/* हेडिंगच्या खाली छोटी डिझाइन */
+h2.text-center::after {
+    content: '';
+    display: block;
+    width: 60%;
+    height: 5px;
+    background-color: var(--primary-color);
+    margin: 10px auto 0;
+    border-radius: 10px;
+}
+
+.img-fluid.rounded {
+    border-radius: var(--border-radius-xl) !important;
+    box-shadow: var(--box-shadow-soft);
+    border: 4px solid var(--accent-color);
+}
+
+/* --- Footer --- */
+.bg-dark {
+    background-color: #2c2c2c !important;
+    border-top-left-radius: var(--border-radius-xl);
+    border-top-right-radius: var(--border-radius-xl);
+}
