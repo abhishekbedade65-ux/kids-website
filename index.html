@@ -1,164 +1,170 @@
-/* --- Google Fonts इम्पोर्ट --- */
-@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&family=Fredoka+One&display=swap');
+<!doctype html>
+<html lang="mr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Colourful ABC - Kids</title>
+<style>
+  :root{
+    --bg: #fff9f0;
+    --card:#fff;
+    --accent:#ff6b6b;
+    --muted:#6b6b6b;
+    --shadow: 0 8px 20px rgba(30,30,60,0.08);
+    font-family: "Segoe UI", Roboto, "Noto Sans", sans-serif;
+  }
+  body{
+    margin:0; padding:28px;
+    background: linear-gradient(180deg,var(--bg), #fff);
+    color:#222;
+  }
+  header{ text-align:center; margin-bottom:18px;}
+  h1{ margin:0; font-size:28px;}
+  p.lead{ margin:6px 0 0; color:var(--muted); }
 
-/* --- रंग आणि व्हेरिएबल्स --- */
-:root {
-    --primary-color: #FFC107; /* तेजस्वी पिवळा - आनंदी रंग */
-    --secondary-color: #FF5722; /* केशरी - ऊर्जेसाठी */
-    --accent-color: #4CAF50; /* हिरवा - फ्रेश वाटण्यासाठी */
-    --text-dark: #333333;
-    --text-light: #ffffff;
-    --bg-light: #FFF9E6; /* पांढऱ्याऐवजी हलका क्रीम कलर */
-    --border-radius-xl: 25px; /* कोपरे गोलाकार करण्यासाठी */
-    --box-shadow-soft: 0 10px 20px rgba(0,0,0,0.1); /* सॉफ्ट सावली */
+  .grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit,minmax(140px,1fr));
+    gap:14px;
+    max-width:1100px;
+    margin:20px auto;
+  }
+
+  .card{
+    background:var(--card);
+    border-radius:16px;
+    padding:14px;
+    box-shadow:var(--shadow);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    cursor:pointer;
+    transition: transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms;
+    user-select:none;
+  }
+  .card:active{ transform: scale(0.98); }
+  .card:hover{ transform: translateY(-6px) scale(1.02); box-shadow: 0 18px 40px rgba(30,30,60,0.12); }
+
+  .letter{
+    font-size:54px;
+    font-weight:700;
+    line-height:1;
+    color:var(--accent);
+  }
+  .emoji{
+    font-size:36px;
+  }
+  .word{
+    font-size:16px;
+    color:#333;
+    font-weight:600;
+  }
+  .controls{ text-align:center; margin-top:18px;}
+  .btn{
+    display:inline-block; padding:8px 12px; border-radius:10px;
+    background:var(--accent); color:white; text-decoration:none; margin:6px;
+  }
+  footer{ text-align:center; color:var(--muted); margin-top:22px; font-size:13px;}
+</style>
+</head>
+<body>
+<header>
+  <h1>आकर्षक A-Z अल्फाबेट कार्ड्स</h1>
+  <p class="lead">क्लिक करा — अक्षर बोलेल आणि छोटा sound play होईल (browser TTS + generated beep).</p>
+</header>
+
+<div class="grid" id="grid"></div>
+
+<div class="controls">
+  <a class="btn" id="ttsSettings">TTS सेटिंग बदल</a>
+  <a class="btn" id="playAll">सर्व प्ले करा</a>
+</div>
+
+<footer>हे कॉपीराईट-फ्री (browser TTS + generated tones) वापरून बनवलं आहे.</footer>
+
+<script>
+const letters = [
+  ["A","Apple","🍎"],["B","Ball","⚽"],["C","Cat","🐱"],["D","Dog","🐶"],
+  ["E","Elephant","🐘"],["F","Fish","🐟"],["G","Grapes","🍇"],["H","Hat","🎩"],
+  ["I","Ice-cream","🍨"],["J","Juice","🧃"],["K","Kite","🪁"],["L","Lion","🦁"],
+  ["M","Moon","🌙"],["N","Nest","🪺"],["O","Orange","🍊"],["P","Parrot","🦜"],
+  ["Q","Queen","👑"],["R","Rabbit","🐰"],["S","Sun","☀️"],["T","Tree","🌳"],
+  ["U","Umbrella","☂️"],["V","Van","🚐"],["W","Water","💧"],["X","Xylophone","🎶"],
+  ["Y","Yoyo","🪀"],["Z","Zebra","🦓"]
+];
+
+const grid = document.getElementById('grid');
+
+function createCard([letter, word, emoji]){
+  const card = document.createElement('button');
+  card.className = 'card';
+  card.type = 'button';
+  card.innerHTML = `<div class="letter">${letter}</div><div class="emoji">${emoji}</div><div class="word">${word}</div>`;
+  // accessibility
+  card.setAttribute('aria-label', `${letter} for ${word}`);
+  card.addEventListener('click', ()=> playLetter(letter, word));
+  return card;
 }
 
-body {
-    font-family: 'Baloo 2', cursive, sans-serif; /* मुलांसाठी वाचायला सोपा फॉन्ट */
-    color: var(--text-dark);
-    background-color: var(--bg-light);
-    /* बॅकग्राउंडला हलका पॅटर्न (ऐच्छिक) - सध्या साधे ठेवले आहे */
-    background-image: radial-gradient(#ffeb3b33 2px, transparent 2px);
-    background-size: 30px 30px;
+letters.forEach(l => grid.appendChild(createCard(l)));
+
+// --- Audio helpers ---
+const synth = window.speechSynthesis;
+let ttsRate = 0.95, ttsPitch = 1.05;
+function speak(text){
+  if(!synth) return;
+  const u = new SpeechSynthesisUtterance(text);
+  u.rate = ttsRate; u.pitch = ttsPitch;
+  // choose a kid-friendly voice if available
+  const voices = synth.getVoices();
+  if(voices && voices.length){
+    // prefer a voice with 'child' or known friendly voices heuristically
+    const prefer = voices.find(v=>/child|kids|junior|serif|female/i.test(v.name)) || voices[0];
+    if(prefer) u.voice = prefer;
+  }
+  synth.cancel();
+  synth.speak(u);
 }
 
-/* --- हेडिंग्जसाठी मस्त फॉन्ट --- */
-h1, h2, h3, h4, h5, h6, .navbar-brand {
-    font-family: 'Fredoka One', cursive; /* जाड आणि गोलाकार फॉन्ट */
-    color: var(--secondary-color);
-    letter-spacing: 1px;
+// small generated beep using WebAudio
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function beep(duration=0.12, freq=880){
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = 'sine';
+  o.frequency.value = freq;
+  g.gain.value = 0.0001;
+  o.connect(g); g.connect(audioCtx.destination);
+  const now = audioCtx.currentTime;
+  g.gain.linearRampToValueAtTime(0.12, now + 0.005);
+  o.start(now);
+  g.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+  o.stop(now + duration + 0.02);
 }
 
-/* --- नॅव्हिगेशन बार (Navbar) --- */
-.navbar {
-    background-color: var(--text-light) !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    padding-top: 15px;
-    padding-bottom: 15px;
-    border-bottom-left-radius: var(--border-radius-xl);
-    border-bottom-right-radius: var(--border-radius-xl);
+function playLetter(letter, word){
+  // pronounce letter + word
+  speak(`${letter}. ${word}.`);
+  // short beep to make it fun
+  try{ if(audioCtx.state === 'suspended') audioCtx.resume(); }catch(e){}
+  beep(0.12, 940);
 }
 
-.navbar-brand {
-    font-size: 1.8rem;
-    color: var(--secondary-color) !important;
-    text-shadow: 2px 2px 0px var(--primary-color);
-}
+// play all sequentially (simple)
+document.getElementById('playAll').addEventListener('click', async ()=>{
+  for(const [l,w] of letters){
+    playLetter(l,w);
+    await new Promise(r=>setTimeout(r,700)); // small gap
+  }
+});
 
-.nav-link {
-    font-weight: 600;
-    color: var(--text-dark) !important;
-    transition: all 0.3s ease;
-    padding: 10px 15px !important;
-    border-radius: 20px;
-}
-
-.nav-link:hover, .nav-link.active {
-    color: var(--secondary-color) !important;
-    background-color: #fff0c4; /* होव्हर केल्यावर हलका पिवळा रंग */
-    transform: translateY(-3px); /* थोडे वर उचलल्यासारखे वाटेल */
-}
-
-.btn-outline-success {
-    color: var(--accent-color);
-    border-color: var(--accent-color);
-    border-radius: 20px;
-    border-width: 2px;
-    font-family: 'Fredoka One', cursive;
-}
-
-.btn-outline-success:hover {
-    background-color: var(--accent-color);
-    color: white;
-    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
-}
-
-/* --- हिरो सेक्शन (सर्वात वरचा भाग) --- */
-.hero-section {
-    padding: 80px 0;
-    /* खाली वाकडी लाईन येण्यासाठी */
-    border-bottom-left-radius: 50px;
-    border-bottom-right-radius: 50px;
-    background: linear-gradient(to bottom, #ffffff, var(--bg-light));
-}
-
-.hero-section h1 {
-    font-size: 3.5rem;
-    color: var(--secondary-color);
-    text-shadow: 3px 3px 0px var(--primary-color);
-    margin-bottom: 20px;
-}
-
-.hero-section p {
-    font-size: 1.3rem;
-    color: #666;
-    margin-bottom: 30px;
-}
-
-.hero-section img {
-    border-radius: var(--border-radius-xl);
-    box-shadow: var(--box-shadow-soft);
-    border: 5px solid var(--primary-color);
-    transition: transform 0.5s ease;
-}
-
-.hero-section img:hover {
-    transform: scale(1.05) rotate(2deg); /* फोटोवर कर्सर नेल्यावर तो हलेल */
-}
-
-/* --- बटन्स (फुगीर आणि आकर्षक) --- */
-.btn-primary {
-    background-color: var(--secondary-color);
-    border-color: var(--secondary-color);
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.2rem;
-    padding: 12px 30px;
-    border-radius: 50px; /* पूर्ण गोलाकार बटण */
-    box-shadow: 0 8px 0px #bf360c; /* बटणाला 3D इफेक्ट देण्यासाठी खाली गडद सावली */
-    transition: all 0.2s ease;
-    margin-top: 10px;
-}
-
-.btn-primary:hover {
-    background-color: #ff7043;
-    border-color: #ff7043;
-    transform: translateY(-3px); /* थोडे वर जाईल */
-    box-shadow: 0 10px 0px #bf360c;
-}
-
-.btn-primary:active {
-    transform: translateY(4px); /* क्लिक केल्यावर खाली दबेल */
-    box-shadow: 0 4px 0px #bf360c;
-}
-
-/* --- अबाउट आणि इतर सेक्शन --- */
-h2.text-center {
-    font-size: 2.5rem;
-    margin-bottom: 40px;
-    position: relative;
-    display: inline-block;
-}
-
-/* हेडिंगच्या खाली छोटी डिझाइन */
-h2.text-center::after {
-    content: '';
-    display: block;
-    width: 60%;
-    height: 5px;
-    background-color: var(--primary-color);
-    margin: 10px auto 0;
-    border-radius: 10px;
-}
-
-.img-fluid.rounded {
-    border-radius: var(--border-radius-xl) !important;
-    box-shadow: var(--box-shadow-soft);
-    border: 4px solid var(--accent-color);
-}
-
-/* --- Footer --- */
-.bg-dark {
-    background-color: #2c2c2c !important;
-    border-top-left-radius: var(--border-radius-xl);
-    border-top-right-radius: var(--border-radius-xl);
-}
+// simple TTS modal-ish settings (cycle)
+document.getElementById('ttsSettings').addEventListener('click', ()=>{
+  ttsRate = ttsRate === 0.95 ? 1.15 : 0.95;
+  ttsPitch = ttsPitch === 1.05 ? 0.95 : 1.05;
+  alert('TTS setting toggled — rate:'+ttsRate.toFixed(2)+', pitch:'+ttsPitch.toFixed(2));
+});
+</script>
+</body>
+</html>
