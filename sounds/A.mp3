@@ -1,1 +1,10 @@
+kids-website/
+   ├── alphabet.html
+   ├── index.html
+   ├── numbers.html
+   └── sounds/   ← इथे mp3 फाइल्स येतील
+        ├── A.mp3
+        ├── B.mp3
+        ├── ...
+        └── Z.mp3
 
