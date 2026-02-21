@@ -1,76 +1,28 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Numbers Learning</title>
-<style>
-body{
-  font-family: Arial;
-  text-align:center;
-  background:#f2f8ff;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px,1fr));
-  gap:15px;
-  padding:20px;
-}
-
-.card{
-  background:white;
-  padding:20px;
-  font-size:28px;
-  border-radius:12px;
-  box-shadow:0 4px 8px rgba(0,0,0,0.1);
-  cursor:pointer;
-}
-
-.card:hover{
-  transform:scale(1.1);
-}
-</style>
-</head>
-
-<body>
-
-<h1>Learn Numbers with Sound</h1>
-
-<div class="grid" id="numbersGrid"></div>
-
 <script>
-const numbers = [
-"1","2","3","4","5",
-"6","7","8","9","10"
-];
-
 const grid = document.getElementById("numbersGrid");
 
-numbers.forEach(num => {
+// 1 ते 100 automatic generate
+for (let i = 1; i <= 100; i++) {
+
   const div = document.createElement("div");
   div.className = "card";
-  div.innerText = num;
+  div.innerText = i;
 
   div.addEventListener("click", () => {
 
     if ('speechSynthesis' in window) {
+
       let speech = new SpeechSynthesisUtterance();
-      speech.text = num;
+      speech.text = i;
       speech.lang = "en-US";
-      speech.volume = 1;
       speech.rate = 0.9;
       speech.pitch = 1;
 
       window.speechSynthesis.speak(speech);
-    } else {
-      alert("Speech not supported in this browser");
     }
 
   });
 
   grid.appendChild(div);
-});
+}
 </script>
-
-</body>
-</html>
